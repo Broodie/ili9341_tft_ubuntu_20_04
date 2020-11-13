@@ -41,8 +41,8 @@ sudo bash -c "echo 'dtoverlay=rpi-display' >> /boot/firmware/usercfg.txt"
 ```
 
 ## 6) Make it permanent at system startup
-If you have `/etc/rc.local` then append `con2fbmap 1 2` before `exit 0`
-if you don't have `/etc/rc.local` then:
+If you have `/etc/rc.local` then append `con2fbmap 1 2` before `exit 0`<br>
+If you don't have `/etc/rc.local` then:
 ```
 wget -N https://github.com/Broodie/ili9341_tft_ubuntu_20_04/raw/main/rc.local
 sudo cp rc.local /etc/rc.local
