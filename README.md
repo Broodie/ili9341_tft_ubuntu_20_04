@@ -1,17 +1,23 @@
 # ili9341_tft_ubuntu20_04
 
-Please note this method is tested only on 2.8" TFT with ili9341 driver on Raspberry Pi 3b (Ubuntu20.04 with Kernel 5.4). It uses Device Tree overlay instead of fbtft_device.
-Maybe this can not work with Raspberry OS or other Ubuntu distros or other Kernel versions. Please don't ask about it.
+Please note this method is tested only on 2.8" TFT with ili9341 driver on Raspberry Pi 3b (Ubuntu20.04 and Raspbian GNU/Linux 10 (buster) with Kernel 5.4). It uses Device Tree overlay instead of fbtft_device.
+Maybe this can not work with other Raspberry Pi OS or other Ubuntu distros or other Kernel versions. Please don't ask about it.
 Startx was not tested. Only console output was tested.
 
 ## 1) Wiring between 2.8" TFT and RPi:
 https://github.com/Broodie/ili9341_tft_ubuntu_20_04/blob/main/rpi-display-overlay.dts
 
 ## 2) Kernel update
+#### Ubuntu20.04
 ```
 sudo curl -L --output /usr/bin/rpi-update https://raw.githubusercontent.com/Hexxeh/rpi-update/master/rpi-update
 sudo chmod +x /usr/bin/rpi-update
 sudo REPO_URI=https://github.com/notro/rpi-firmware rpi-update
+sudo reboot
+```
+#### Raspbian GNU/Linux 10 (buster)
+```
+sudo rpi-update
 sudo reboot
 ```
 
@@ -25,8 +31,9 @@ sudo apt-get install -y fbset
 wget -N https://github.com/Broodie/ili9341_tft_ubuntu_20_04/raw/main/rpi-display.dtbo
 sudo cp rpi-display.dtbo /boot/overlays/rpi-display.dtbo
 ```
+*INFO: There is already an rpi-display overlay present in Raspbian GNU/Linux 10 (buster) but there the Reset pin is defined as GPIO23. If you don't want to go with touch screen I would propose to use my rpi-display.dtbo with GPIO25 for Reset pin because with that you will get clean hardware build.*
 
-#### 4*) LED, DC, RESET pins can be connected in different GPIOs than described in .dts file. In that case you need to modify the .dts file accordingly and compile it into correct destinaton
+#### LED, DC, RESET pins can be connected in different GPIOs than described in .dts file. In that case you need to modify the .dts file accordingly and compile it into correct destinaton
 ```
 wget -N https://github.com/Broodie/ili9341_tft_ubuntu_20_04/raw/main/rpi-display-overlay.dts
 ```
@@ -36,17 +43,25 @@ sudo dtc -@ -I dts -O dtb -o /boot/overlays/rpi-display.dtbo rpi-display-overlay
 ```
 
 ## 5) Enable SPI with Device Tree overlay
+#### Ubuntu20.04
 ```
 sudo bash -c "echo 'dtoverlay=rpi-display' >> /boot/firmware/usercfg.txt"
 ```
+#### Raspbian GNU/Linux 10 (buster)
+```
+sudo bash -c "echo 'dtoverlay=rpi-display' >> /boot/config.txt"
+```
 
 ## 6) Make it permanent at system startup
+#### Ubuntu20.04
 If you have `/etc/rc.local` then append `con2fbmap 1 2` before `exit 0`<br>
 If you don't have `/etc/rc.local` then:
 ```
 wget -N https://github.com/Broodie/ili9341_tft_ubuntu_20_04/raw/main/rc.local
 sudo cp rc.local /etc/rc.local
 ```
+#### Raspbian GNU/Linux 10 (buster)
+System handle it automatically. My tests shows no need to change anything here.
 
 ## 7) Console font face and size
 ```
@@ -60,7 +75,7 @@ FONTSIZE="6x12"
 sudo reboot
 ```
 
-## Troubleshooting:
+# Troubleshooting:
 If the console does not appear on the display then maybe your display is not defined the way like me. For me it was `fb2`.
 ### 1) Check whether the device is recognized by the system
 ```
