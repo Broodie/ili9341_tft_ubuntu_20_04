@@ -59,18 +59,22 @@ If you don't have `/etc/rc.local` then:
 ```
 wget -N https://github.com/Broodie/ili9341_tft_ubuntu_20_04/raw/main/rc.local
 sudo cp rc.local /etc/rc.local
+sudo chmod 755 /etc/rc.local
 ```
 #### Raspbian GNU/Linux 10 (buster)
 System handle it automatically. My tests shows no need to change anything here.
 
-## 7) Console font face and size
+## 7) Disable GUI startup (only for Ubuntu20.04):
+sudo systemctl set-default multi-user
+
+## 8) Console font face and size
 ```
 sudo nano /etc/default/console-setup
 ```
 FONTFACE="Terminus"<br>
 FONTSIZE="6x12"
 
-## 8) Reboot
+## 9) Reboot
 ```
 sudo reboot
 ```
